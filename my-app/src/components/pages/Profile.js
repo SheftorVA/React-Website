@@ -51,7 +51,7 @@ export default function Profile(props) {
             document.location.reload();
           }}
         >
-          SIGN OUT
+          LOG OUT
         </button>
         <div className="delete--container">
           <h3>

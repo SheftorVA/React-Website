@@ -51,7 +51,7 @@ export default function SignUp() {
   } else {
     return (
       <div className="signup">
-        <h1 className="congrats">🔥 ACCOUNT CREATED! TRY LOGGIN IN! 🔥</h1>
+        <h1 className="congrats">🔥 ACCOUNT CREATED! TRY TO LOG IN! 🔥</h1>
       </div>
     );
   }

@@ -29,7 +29,7 @@ export default function LogIn() {
   return (
     <div className="signin">
       <form className="signin--form" onSubmit={handleSubmit(onSubmit)}>
-        <h1>SIGN IN</h1>
+        <h1>LOG IN</h1>
         <input
           type="text"
           placeholder="username"
@@ -40,7 +40,7 @@ export default function LogIn() {
           placeholder="password"
           {...register('password', { required: '💥 Password is required' })}
         />
-        <button>SIGN IN</button>
+        <button>LOG IN</button>
       </form>
       <div className="errors">
         {userInfo && <p>{userInfo}</p>}

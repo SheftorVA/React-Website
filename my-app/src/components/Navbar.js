@@ -15,10 +15,10 @@ export default function Navbar(props) {
       </Link>
       <Search placeholder="search pokemon..." />
       <ul>
-        <CustomLink to="/signin">
+        <CustomLink to="/signup">
           <p>{props.main}</p>
         </CustomLink>
-        <CustomLink to="/signup">
+        <CustomLink to="/login">
           <p>{props.secondary}</p>
         </CustomLink>
       </ul>

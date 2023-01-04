@@ -62,14 +62,14 @@ function App() {
       <Navbar
         main={isAuth ? heartIcon : 'SIGN UP'}
         secondary={
-          isAuth && localStorage.getItem('user') ? personIcon : 'SIGN IN'
+          isAuth && localStorage.getItem('user') ? personIcon : 'LOG IN'
         }
       />
       <UserContext.Provider value={[isAuth, login, logout, count, setCount]}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/signup" element={isAuth ? <Profile /> : <LogIn />} />
-          <Route path="/signin" element={isAuth ? <Favorites /> : <SignUp />} />
+          <Route path="/login" element={isAuth ? <Profile /> : <LogIn />} />
+          <Route path="/signup" element={isAuth ? <Favorites /> : <SignUp />} />
           <Route path="/pokemon" element={<Pokemon />} />
         </Routes>
       </UserContext.Provider>
