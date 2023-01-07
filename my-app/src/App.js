@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import useAuth from './hooks/UseAuth';
 import Navbar from './components/Navbar';
@@ -15,6 +15,7 @@ import Blue from './components/themes/Blue';
 import Orange from './components/themes/Orange';
 import Maroon from './components/themes/Maroon';
 import Pink from './components/themes/Pink';
+import History from './components/pages/History';
 
 function App() {
   if (window.localStorage.getItem('loggedIn') === 'true') {
@@ -34,6 +35,8 @@ function App() {
   const [count2, setCount2] = useState(0);
   const [likes, setLikes] = useState(0);
 
+  const [viewedPokemones, setViewedPokemones] = useState([]);
+
   if (window.localStorage.getItem('loggedIn') === 'true' && count === 0) {
     setCount(count + 1);
     login();
@@ -48,6 +51,7 @@ function App() {
       <IoHeartOutline /> <span className="text">FAVORITES</span>
     </div>
   );
+
   const personIcon = (
     <div>
       <IoPersonOutline />{' '}
@@ -64,13 +68,28 @@ function App() {
         secondary={
           isAuth && localStorage.getItem('user') ? personIcon : 'LOG IN'
         }
+        pathMain={isAuth ? '/favorites' : '/signup'}
+        pathSecondary={isAuth ? '/profile' : '/login'}
       />
+      <History />
       <UserContext.Provider value={[isAuth, login, logout, count, setCount]}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={isAuth ? <Profile /> : <LogIn />} />
-          <Route path="/signup" element={isAuth ? <Favorites /> : <SignUp />} />
+          <Route
+            path="/profile"
+            element={isAuth ? <Profile /> : <Navigate to="/login" />}
+          />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/pokemon" element={<Pokemon />} />
+          <Route
+            path="/favorites"
+            element={isAuth ? <Favorites /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="/history"
+            element={isAuth ? <History /> : <Navigate to="/login" />}
+          />
         </Routes>
       </UserContext.Provider>
     </>

@@ -3,71 +3,47 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from '../Modal';
 
-export default function Favorites() {
-  const [data, setData] = useState([]);
-  const [img, setImg] = useState([]);
-  const [modal, setModal] = useState(null);
-
-  const favArr =
-    window.localStorage.getItem('favorites') &&
-    JSON.parse(window.localStorage.getItem('favorites'));
-
-  let pokemonName = [];
-  let pokemonImg = [];
-
-  function push(json) {
-    if (
-      favArr.length === pokemonName.length ||
-      pokemonName.includes(json.name)
-    ) {
-      return;
-    }
-    setImg([]);
-    setData([]);
-
-    pokemonName = [...pokemonName, json.name];
-
-    pokemonImg = [...pokemonImg, json.sprites.front_shiny];
-
-    setData(pokemonName);
-    setImg(pokemonImg);
-  }
+function useFavoritesPokemons(pokemonNames) {
+  const [pokemonData, setPokemonData] = useState([]);
 
   useEffect(() => {
-    if (favArr) {
-      setData([]);
-      setImg([]);
-      for (const pokemon of favArr) {
-        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-          .then((response) => response.json())
-          .then((json) => push(json));
-      }
+    if (pokemonNames.length) {
+      Promise.all(
+        pokemonNames.map((pokemonName) =>
+          fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+            .then((response) => response.json())
+            .then(({ name, sprites }) => ({ name, image: sprites.front_shiny }))
+        )
+      ).then(setPokemonData);
     }
-  }, []);
+  }, [pokemonNames.length]);
+
+  return {
+    pokemonData,
+    clearData: () => setPokemonData([]),
+  };
+}
+
+export default function Favorites() {
+  const [modal, setModal] = useState(null);
+
+  const favArr = JSON.parse(window.localStorage.getItem('favorites') || '[]');
+
+  const { pokemonData, clearData } = useFavoritesPokemons(favArr);
 
   function clearLikes() {
     window.localStorage.removeItem('favorites');
-    setData(false);
+    clearData();
   }
 
-  function onClick(e) {
-    localStorage.setItem(
-      'clickedPokemon',
-      e.target.parentNode.firstChild.innerText.toLowerCase()
-    );
+  function onClick(pokemonName) {
+    localStorage.setItem('clickedPokemon', pokemonName);
     // console.log(e.target.parentNode.firstChild.innerText);
-  }
-
-  function onClickImage(e) {
-    const name =
-      e.nativeEvent.path[1].parentNode.firstChild.innerText.toLowerCase();
-
-    localStorage.setItem('clickedPokemon', name);
   }
 
   return (
     <>
-      {favArr ? (
+      {favArr.length ? (
         <div className="fav">
           <h1>
             {<IoHeartOutline />} {favArr.length} Favorite pokemon
@@ -78,21 +54,22 @@ export default function Favorites() {
           <div className="fav-container">
             <div>
               <ul className="home">
-                {data &&
-                  data.map((el, i) => {
-                    return (
-                      <Link to="../pokemon" onClick={onClick} key={i}>
-                        <li className="card" key={i}>
-                          <div className="poke-name">{el}</div>
-                          {img ? (
-                            <img src={img[i]} onClick={onClickImage} alt="" />
-                          ) : (
-                            'Loading'
-                          )}
-                        </li>
-                      </Link>
-                    );
-                  })}
+                {pokemonData.length
+                  ? pokemonData.map(({ name, image }) => {
+                      return (
+                        <Link
+                          to="../pokemon"
+                          onClick={() => onClick(name)}
+                          key={name}
+                        >
+                          <li className="card" key={name}>
+                            <div className="poke-name">{name}</div>
+                            <img src={image} alt="" />
+                          </li>
+                        </Link>
+                      );
+                    })
+                  : 'Loading'}
               </ul>
             </div>
           </div>

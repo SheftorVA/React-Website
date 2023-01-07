@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 function History() {
-  const [historyItem, setHistoryItem] = useState(
-    localStorage.getItem(historyItem) || null
-  );
+  const viewedPokemones = useContext(UserContext);
 
-  return <></>;
+  // const navigate = useNavigate();
+
+  // const goHistory = () => navigate('/history', { replace: true });
+
+  return (
+    <React.Fragment>
+      <NavLink to="/history">
+        <button>{'History'}</button>
+      </NavLink>
+    </React.Fragment>
+  );
 }
+
+export default History;

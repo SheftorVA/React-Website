@@ -8,14 +8,13 @@ function Search({ placeholder }) {
   const [input, setInput] = useState('');
   const inputRef = useRef();
   const [data, setData] = useState();
+  let location = useLocation();
 
   useEffect(
     () =>
-      async function fetchData() {
-        await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0`)
-          .then((response) => response.json())
-          .then((json) => setData(json.results));
-      },
+      void fetch(`https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0`)
+        .then((response) => response.json())
+        .then((json) => setData(json.results)),
     []
   );
 
@@ -42,7 +41,6 @@ function Search({ placeholder }) {
     inputRef.current.focus();
   };
 
-  let location = useLocation();
   function onClick(e) {
     if (location.pathname === '/pokemon') {
       document.location.reload();
@@ -63,14 +61,14 @@ function Search({ placeholder }) {
           ref={inputRef}
         />
         <div className="search--icon">
-          {input.length > 0 ? (
+          {Boolean(input.length) ? (
             <IoCloseOutline onClick={clearInput} />
           ) : (
             <IoSearchOutline onClick={clearInput} />
           )}
         </div>
       </div>
-      {filteredData.length !== 0 && (
+      {Boolean(filteredData.length) && (
         <div className="data-result">
           {filteredData.map((pokemon, key) => {
             return (

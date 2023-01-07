@@ -65,6 +65,7 @@ function Pokemon() {
         </li>
       );
     });
+
     const pokemonListWithIcons = pokemonList.map((el, i) => {
       return (
         <div className="stat-icons--container" key={i}>
