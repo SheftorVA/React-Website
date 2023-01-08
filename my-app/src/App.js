@@ -77,18 +77,18 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/profile"
-            element={isAuth ? <Profile /> : <Navigate to="/login" />}
+            element={isAuth ? <Profile /> : <Navigate to="/login" replace />}
           />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/pokemon" element={<Pokemon />} />
           <Route
             path="/favorites"
-            element={isAuth ? <Favorites /> : <Navigate to="/signup" />}
+            element={isAuth ? <Favorites /> : <Navigate to="/signup" replace />}
           />
           <Route
             path="/history"
-            element={isAuth ? <History /> : <Navigate to="/login" />}
+            element={isAuth ? <History /> : <Navigate to="/login" replace />}
           />
         </Routes>
       </UserContext.Provider>
