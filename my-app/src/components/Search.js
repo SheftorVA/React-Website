@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { IoCloseOutline, IoSearchOutline } from 'react-icons/io5';
 import { Link, Navigate, NavLink, Route, useLocation } from 'react-router-dom';
 import { UserContext } from './UserContext';
+import AddToSearchHistory from './SearchedPokemons';
 
 function Search({ placeholder }) {
   const [filteredData, setFilteredData] = useState([]);
@@ -9,6 +10,11 @@ function Search({ placeholder }) {
   const inputRef = useRef();
   const [data, setData] = useState();
   let location = useLocation();
+  const currentUser = useContext(UserContext);
+  const [searchedPokemons, setSearchedPokemons] = useState({
+    user: currentUser,
+    pokemonsFound: [],
+  });
 
   useEffect(
     () =>
@@ -21,6 +27,7 @@ function Search({ placeholder }) {
   const handleFilter = (e) => {
     const searchWord = e.target.value.toLowerCase();
     const searchWordStrict = searchWord.replace(/[^A-Za-z]/gi, '');
+
     setInput(searchWordStrict.toUpperCase());
     const newFilter = data.filter((value) => {
       return (
@@ -28,6 +35,7 @@ function Search({ placeholder }) {
         value.name.includes(searchWordStrict)
       );
     });
+
     if (searchWordStrict === '') {
       setFilteredData([]);
     } else {
@@ -41,11 +49,14 @@ function Search({ placeholder }) {
     inputRef.current.focus();
   };
 
-  function onClick(e) {
+  function pokemonSearchClick(e) {
+    AddToSearchHistory(currentUser);
     if (location.pathname === '/pokemon') {
       document.location.reload();
     }
     localStorage.setItem('clickedPokemon', e.target.childNodes[0].wholeText);
+
+    setSearchedPokemons(localStorage.getItem('searchedPokemons'));
     setInput('');
     setFilteredData([]);
   }
@@ -73,10 +84,11 @@ function Search({ placeholder }) {
           {filteredData.map((pokemon, key) => {
             return (
               <Link className="data-item" to="/pokemon" key={key}>
-                <p onClick={onClick}>{pokemon.name}</p>
+                <p onClick={pokemonSearchClick}>{pokemon.name}</p>
               </Link>
             );
           })}
+          {console.log('Searched pokemons:', searchedPokemons)}
         </div>
       )}
     </div>

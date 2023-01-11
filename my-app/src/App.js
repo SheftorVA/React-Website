@@ -10,7 +10,7 @@ import LogIn from './components/pages/LogIn';
 import { UserContext } from './components/UserContext';
 import { IoHeartOutline, IoPersonOutline } from 'react-icons/io5';
 import Pokemon from './components/pages/Pokemon';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Blue from './components/themes/Blue';
 import Orange from './components/themes/Orange';
 import Maroon from './components/themes/Maroon';
@@ -33,9 +33,7 @@ function App() {
   const [isAuth, login, logout] = useAuth(false);
   const [count, setCount] = useState(0);
   const [count2, setCount2] = useState(0);
-  const [likes, setLikes] = useState(0);
-
-  const [viewedPokemones, setViewedPokemones] = useState([]);
+  // const [likes, setLikes] = useState(0);
 
   if (window.localStorage.getItem('loggedIn') === 'true' && count === 0) {
     setCount(count + 1);
@@ -70,8 +68,8 @@ function App() {
         }
         pathMain={isAuth ? '/favorites' : '/signup'}
         pathSecondary={isAuth ? '/profile' : '/login'}
+        searchHistory={isAuth ? '/history' : '/signup'}
       />
-      <History />
       <UserContext.Provider value={[isAuth, login, logout, count, setCount]}>
         <Routes>
           <Route path="/" element={<Home />} />

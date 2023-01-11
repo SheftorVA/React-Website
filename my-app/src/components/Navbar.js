@@ -26,6 +26,7 @@ export default function Navbar(props) {
         POKEMONIA
       </Link>
       <Search placeholder="search pokemon..." />
+      <CustomLink to={props.searchHistory}>History</CustomLink>
       <ul>
         <CustomLink to={props.pathMain}>
           <p>{props.main}</p>
